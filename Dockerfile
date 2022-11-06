@@ -13,11 +13,11 @@ RUN mkdir -p /app && wget -nv -P /tmp https://github.com/szyku/nltk-api/archive/
 
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev linux-headers && \
-    pip install -U nltk && \
-    python -W ignore -m nltk.downloader wordnet punkt averaged_perceptron_tagger && \
-    pip install -r ./nltk_api/requirements.txt && \
-    apk del linux-headers musl-dev gcc wget ca-certificates libstdc++ mpc1 mpfr3 pkgconfig pkgconf libgcc libgomp isl gmp binutils binutils-libs
+RUN apk add --no-cache gcc musl-dev linux-headers 
+RUN pip install -U nltk
+RUN python -W ignore -m nltk.downloader wordnet punkt averaged_perceptron_tagger 
+RUN pip install -r ./nltk_api/requirements.txt
+RUN apk del linux-headers musl-dev gcc wget ca-certificates libstdc++ mpc1 mpfr3 pkgconfig pkgconf libgcc libgomp isl gmp binutils binutils-libs
 
 ENV APP_PORT 5000
 
