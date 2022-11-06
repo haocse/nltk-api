@@ -1,4 +1,4 @@
 gevent == 1.2.2
-nltk
+nltk == 3.2.5
 nose
 flask >= 0.12.0
