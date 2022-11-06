@@ -19,9 +19,10 @@ RUN apk --update add python py-pip openssl ca-certificates py-openssl wget
 RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python-dev py-pip build-base \
   && pip install --upgrade pip
 # RUN apk add --no-cache gcc musl-dev linux-headers 
-# RUN pip install -U nltk
-RUN pip install -r ./nltk_api/requirements.txt
+RUN pip install -U nltk
 RUN python -W ignore -m nltk.downloader wordnet punkt averaged_perceptron_tagger 
+
+RUN pip install -r ./nltk_api/requirements.txt
 RUN apk del linux-headers musl-dev gcc wget ca-certificates libstdc++ mpc1 mpfr3 pkgconfig pkgconf libgcc libgomp isl gmp binutils binutils-libs
 
 ENV APP_PORT 5000
