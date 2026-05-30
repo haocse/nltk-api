@@ -1,29 +1,16 @@
-FROM python:3.6.0-alpine
-LABEL version="1.0"
-LABEL description="Python 3 with NLTK and WordNet prepared."
-LABEL maintainer "Szymon Szymański szymon.szymanski@hotmail.com"
+FROM python:3.11-alpine
+LABEL version="2.0"
+LABEL description="Python 3 with NLTK and WordNet prepared (ARM64/AMD64)."
 
-RUN apk update && \
-    apk add ca-certificates wget && \
-    update-ca-certificates
-
-# RUN mkdir -p /app && wget -nv -P /tmp https://github.com/szyku/nltk-api/archive/master.tar.gz && \
-#     tar -zxf /tmp/master.tar.gz -C /tmp && cp -rf /tmp/nltk-api-master/* /app && \
-#     rm -rf /tmp/master.tar.gz /tmp/nltk-api-master /app/Dockerfile
+RUN apk update && apk add --no-cache ca-certificates gcc musl-dev
 
 WORKDIR /app
-# copy to app
 COPY . /app
 
-RUN apk --update add python py-pip openssl ca-certificates py-openssl wget
-RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python-dev py-pip build-base \
-  && pip install --upgrade pip
-# RUN apk add --no-cache gcc musl-dev linux-headers 
-RUN pip install -U nltk
-RUN python -W ignore -m nltk.downloader wordnet punkt averaged_perceptron_tagger 
+RUN pip install --upgrade pip && \
+    pip install flask gunicorn nltk gevent
 
-RUN pip install -r ./nltk_api/requirements.txt
-RUN apk del linux-headers musl-dev gcc wget ca-certificates libstdc++ mpc1 mpfr3 pkgconfig pkgconf libgcc libgomp isl gmp binutils binutils-libs
+RUN python -W ignore -c "import nltk; nltk.download('wordnet'); nltk.download('punkt'); nltk.download('averaged_perceptron_tagger'); nltk.download('omw-1.4')"
 
 ENV APP_PORT 5000
 
